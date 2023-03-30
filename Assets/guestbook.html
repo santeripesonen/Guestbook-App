@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
+      integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls"
+      crossorigin="anonymous"
+    />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Guestbook</title>
+    <script defer>
+      fetch("/messages")
+        .then((data) => data.json())
+        .then((data) => {
+          data.forEach((messageData) => addRow(messageData));
+        });
+
+      function addRow(messageData) {
+        const tbody = document.getElementById("messagerows");
+        const tr = document.createElement("tr");
+        const usernameTd = document.createElement("td");
+        const messageTd = document.createElement("td");
+        const countryTd = document.createElement("td");
+        const dateTd = document.createElement("td");
+
+        const userNameTextNode = document.createTextNode(messageData.username);
+        usernameTd.appendChild(userNameTextNode);
+
+        const messageTextNode = document.createTextNode(messageData.message);
+        messageTd.appendChild(messageTextNode);
+
+        const countryTextNode = document.createTextNode(messageData.country);
+        countryTd.appendChild(countryTextNode);
+
+        const date = new Date(messageData.date);
+        const dateFormatted = date.toLocaleDateString();
+        const dateTextNode = document.createTextNode(dateFormatted);
+        dateTd.appendChild(dateTextNode);
+
+        tr.appendChild(usernameTd);
+        tr.appendChild(messageTd);
+        tr.appendChild(countryTd);
+        tr.appendChild(dateTd);
+
+        tbody.appendChild(tr);
+      }
+    </script>
+  </head>
+  <body>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <p>
+        <a href="/">frontpage</a>
+      </p>
+      <h1>Guestbook</h1>
+    </div>
+    <table class="pure-table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Message</th>
+          <th>Country</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="messagerows"></tbody>
+    </table>
+  </body>
+</html>
