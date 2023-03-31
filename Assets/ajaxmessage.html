@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
+      integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls"
+      crossorigin="anonymous"
+    />
     <title>Guestbook</title>
     <link
       rel="stylesheet"
@@ -51,13 +57,28 @@
         </p>
       </form>
 
+      <table
+        class="pure-table"
+        style="display: none; margin: 0 auto"
+        id="table"
+      >
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Message</th>
+            <th>Country</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="messagerows"></tbody>
+      </table>
+
       <div id="message-list"></div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="app.js"></script>
     <script defer>
       function ajaxMessage(e) {
         e.preventDefault();
@@ -77,15 +98,46 @@
           }),
         })
           .then((res) => res.json())
-          .then((json) =>
-            setTimeout(() => {
-              window.location.href = "/guestbook";
-            }, 500)
-          );
+          .then((json) => {
+            console.log(json);
+            json.messages.forEach((messageData) => addRow(messageData));
+            document.getElementById("table").style.display = "block";
+          })
+          .catch((err) => console.log(err));
       }
       document
         .getElementById("message-form")
         .addEventListener("submit", ajaxMessage);
+
+      function addRow(messageData) {
+        const tbody = document.getElementById("messagerows");
+        const tr = document.createElement("tr");
+        const usernameTd = document.createElement("td");
+        const messageTd = document.createElement("td");
+        const countryTd = document.createElement("td");
+        const dateTd = document.createElement("td");
+
+        const userNameTextNode = document.createTextNode(messageData.username);
+        usernameTd.appendChild(userNameTextNode);
+
+        const messageTextNode = document.createTextNode(messageData.message);
+        messageTd.appendChild(messageTextNode);
+
+        const countryTextNode = document.createTextNode(messageData.country);
+        countryTd.appendChild(countryTextNode);
+
+        const date = new Date(messageData.date);
+        const dateFormatted = date.toLocaleDateString();
+        const dateTextNode = document.createTextNode(dateFormatted);
+        dateTd.appendChild(dateTextNode);
+
+        tr.appendChild(usernameTd);
+        tr.appendChild(messageTd);
+        tr.appendChild(countryTd);
+        tr.appendChild(dateTd);
+
+        tbody.appendChild(tr);
+      }
     </script>
   </body>
 </html>
