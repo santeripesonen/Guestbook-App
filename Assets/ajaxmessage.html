@@ -99,7 +99,6 @@
         })
           .then((res) => res.json())
           .then((json) => {
-            console.log(json);
             json.messages.forEach((messageData) => addRow(messageData));
             document.getElementById("table").style.display = "block";
           })

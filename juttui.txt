@@ -1,0 +1,3 @@
+- ajax callit ja table
+- tyylit 
+- responsiivisuus mobiililaitteella
